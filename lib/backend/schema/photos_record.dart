@@ -21,8 +21,14 @@ class PhotosRecord extends FirestoreRecord {
   String get image => _image ?? '';
   bool hasImage() => _image != null;
 
+  // "response" field.
+  String? _response;
+  String get response => _response ?? '';
+  bool hasResponse() => _response != null;
+
   void _initializeFields() {
     _image = snapshotData['image'] as String?;
+    _response = snapshotData['response'] as String?;
   }
 
   static CollectionReference get collection =>
@@ -60,10 +66,12 @@ class PhotosRecord extends FirestoreRecord {
 
 Map<String, dynamic> createPhotosRecordData({
   String? image,
+  String? response,
 }) {
   final firestoreData = mapToFirestore(
     <String, dynamic>{
       'image': image,
+      'response': response,
     }.withoutNulls,
   );
 
@@ -75,11 +83,12 @@ class PhotosRecordDocumentEquality implements Equality<PhotosRecord> {
 
   @override
   bool equals(PhotosRecord? e1, PhotosRecord? e2) {
-    return e1?.image == e2?.image;
+    return e1?.image == e2?.image && e1?.response == e2?.response;
   }
 
   @override
-  int hash(PhotosRecord? e) => const ListEquality().hash([e?.image]);
+  int hash(PhotosRecord? e) =>
+      const ListEquality().hash([e?.image, e?.response]);
 
   @override
   bool isValidKey(Object? o) => o is PhotosRecord;
